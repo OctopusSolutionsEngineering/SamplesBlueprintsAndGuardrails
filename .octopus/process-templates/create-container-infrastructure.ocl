@@ -1,6 +1,11 @@
 name = "Create Container Infrastructure"
 description = "Process template that will create an Azure SQL Database and Tenant Namespace"
 
+icon {
+    color = "#25D284"
+    id = "tools"
+}
+
 parameter "Template.SQLServer.Name" {
     display_settings = {
         Octopus.ControlType = "Sensitive"
