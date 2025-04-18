@@ -245,13 +245,18 @@ step "notify-dbas-of-pending-changes" {
 
 step "manual-intervention-required" {
     condition = "Variable"
-    name = "Manual Intervention Required"
+    name = "DBA Approve Script"
     properties = {
         Octopus.Step.ConditionVariableExpression = "#{Octopus.Action[Check Script For Auto Approval].Output.ApprovalRequired}"
     }
 
     action {
         action_type = "Octopus.Manual"
+        notes = <<-EOT
+                **Only Runs When Auto Approval Fails**
+                
+                Pauses the deployment and requires a DBA to approve the script before proceeding.
+                EOT
         properties = {
             Octopus.Action.Manual.BlockConcurrentDeployments = "False"
             Octopus.Action.Manual.Instructions = <<-EOT
@@ -269,6 +274,11 @@ step "run-adhoc-script" {
 
     action {
         action_type = "Octopus.Script"
+        notes = <<-EOT
+                **Always Runs**
+                
+                Runs the script that the requester submitted.
+                EOT
         properties = {
             Octopus.Action.RunOnServer = "false"
             Octopus.Action.Script.ScriptBody = <<-EOT
@@ -333,6 +343,11 @@ step "notify-dbas-and-requester" {
 
     action {
         action_type = "Octopus.Email"
+        notes = <<-EOT
+                **Always Runs (even after failures)**
+                
+                Sends out a notification to the requester and DBAs letting them know the status of the script run.
+                EOT
         properties = {
             Octopus.Action.Email.Body = <<-EOT
                 The request to update #{Template.SQLServer.Database.Name} in #{Octopus.Environment.Name}.  That following script has finished running.  The script you submitted was:
