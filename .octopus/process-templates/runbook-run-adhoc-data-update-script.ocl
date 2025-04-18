@@ -1,6 +1,11 @@
 name = "Runbook - Run Adhoc Data Update Script"
 description = "Process template that will allow you to run a adhoc database script to update a row in the database to fix \"data funk\""
 
+icon {
+    color = "#FFB867"
+    id = "tools"
+}
+
 parameter "Template.SQLServer.Name" {
     display_settings = {
         Octopus.ControlType = "Sensitive"
@@ -15,7 +20,7 @@ parameter "Template.SQLServer.User.Name" {
     }
     help_text = <<-EOT
             
-            The login of the user who has permissions to create a database.
+            The login of the user who has permissions to run the adhoc script on the database.
             
             Leave blank for integrated security
             EOT
@@ -27,7 +32,7 @@ parameter "Template.SQLServer.User.Password" {
         Octopus.ControlType = "Sensitive"
     }
     help_text = <<-EOT
-            The password of the user who has permissions to create SQL Logins
+            The password of the user who has permissions to run the adhoc script on the database
             
             Leave blank for integrated security
             EOT
@@ -38,6 +43,6 @@ parameter "Template.SQLServer.Database.Name" {
     display_settings = {
         Octopus.ControlType = "Sensitive"
     }
-    help_text = "The name of the database to delete"
+    help_text = "The name of the database to to run the script on"
     label = "Database to Delete"
 }
