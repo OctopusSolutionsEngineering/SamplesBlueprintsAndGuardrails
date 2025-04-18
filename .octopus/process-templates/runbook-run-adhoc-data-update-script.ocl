@@ -3,7 +3,7 @@ description = "Process template that will allow you to run a adhoc database scri
 
 icon {
     color = "#FFB867"
-    id = "tools"
+    id = "database"
 }
 
 parameter "Template.ScriptToRun.Text" {
