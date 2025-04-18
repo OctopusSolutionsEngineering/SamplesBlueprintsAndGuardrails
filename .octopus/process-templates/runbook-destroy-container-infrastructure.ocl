@@ -1,0 +1,2 @@
+name = "Runbook - Destroy Container Infrastructure"
+description = "Process template that will delete the Kubernetes Namespace and Azure SQL Database."
