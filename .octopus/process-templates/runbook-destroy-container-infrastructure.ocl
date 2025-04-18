@@ -20,7 +20,7 @@ parameter "Template.SQLServer.User.Name" {
     }
     help_text = <<-EOT
             
-            The login of the user who has permissions to create a database.
+            The login of the user who has permissions to delete a database.
             
             Leave blank for integrated security
             EOT
@@ -32,7 +32,7 @@ parameter "Template.SQLServer.User.Password" {
         Octopus.ControlType = "Sensitive"
     }
     help_text = <<-EOT
-            The password of the user who has permissions to create SQL Logins
+            The password of the user who has permissions to delete databases.
             
             Leave blank for integrated security
             EOT
@@ -51,7 +51,7 @@ parameter "Template.Kubernetes.Namespace.Name" {
     display_settings = {
         Octopus.ControlType = "SingleLineText"
     }
-    help_text = "The name of the Kubernetes Namespace to create if not exists"
+    help_text = "The name of the Kubernetes Namespace to delete if exists."
     label = "Kubernetes Namespace Name"
 }
 
