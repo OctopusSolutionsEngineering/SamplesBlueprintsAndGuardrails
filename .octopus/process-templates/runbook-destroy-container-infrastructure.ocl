@@ -1,2 +1,56 @@
 name = "Runbook - Destroy Container Infrastructure"
 description = "Process template that will delete the Kubernetes Namespace and Azure SQL Database."
+
+icon {
+    color = "#25D284"
+    id = "tools"
+}
+
+parameter "Template.SQLServer.Name" {
+    display_settings = {
+        Octopus.ControlType = "Sensitive"
+    }
+    help_text = "The URL or IP Address of the SQL Server to perform the work on"
+    label = "SQL Server Name"
+}
+
+parameter "Template.SQLServer.User.Name" {
+    display_settings = {
+        Octopus.ControlType = "Sensitive"
+    }
+    help_text = <<-EOT
+            
+            The login of the user who has permissions to create a database.
+            
+            Leave blank for integrated security
+            EOT
+    label = "SQL Server Username"
+}
+
+parameter "Template.SQLServer.User.Password" {
+    display_settings = {
+        Octopus.ControlType = "Sensitive"
+    }
+    help_text = <<-EOT
+            The password of the user who has permissions to create SQL Logins
+            
+            Leave blank for integrated security
+            EOT
+    label = "SQL Password"
+}
+
+parameter "Template.SQLServer.Database.Name" {
+    display_settings = {
+        Octopus.ControlType = "Sensitive"
+    }
+    help_text = "The name of the database to create"
+    label = "Database to Create"
+}
+
+parameter "Template.Kubernetes.Namespace.Name" {
+    display_settings = {
+        Octopus.ControlType = "SingleLineText"
+    }
+    help_text = "The name of the Kubernetes Namespace to create if not exists"
+    label = "Kubernetes Namespace Name"
+}
