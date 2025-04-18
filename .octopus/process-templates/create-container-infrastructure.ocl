@@ -1,4 +1,4 @@
-name = "Create Container Infrastructure"
+name = "Runbook - Create Container Infrastructure"
 description = "Process template that will create an Azure SQL Database and Tenant Namespace"
 
 icon {
