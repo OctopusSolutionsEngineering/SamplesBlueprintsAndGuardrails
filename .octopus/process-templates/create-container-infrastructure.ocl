@@ -196,6 +196,11 @@ step "verify-database-creation" {
 
     action {
         action_type = "Octopus.Script"
+        notes = <<-EOT
+                **Always Runs**
+                
+                Runs a script on the database to make sure it was successfully created.
+                EOT
         properties = {
             Octopus.Action.RunOnServer = "false"
             Octopus.Action.Script.ScriptBody = <<-EOT
