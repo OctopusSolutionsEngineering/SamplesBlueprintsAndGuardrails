@@ -22,6 +22,22 @@ parameter "db-connection-string" {
     label = "Database Connection String"
 }
 
+parameter "email-subject" {
+    display_settings = {
+        Octopus.ControlType = "SingleLineText"
+    }
+    help_text = "Provide an email notification subject. "
+    label = "Email Notification - Subject"
+}
+
+parameter "email-body" {
+    display_settings = {
+        Octopus.ControlType = "MultiLineText"
+    }
+    help_text = "Provide the email notification body. "
+    label = "Email Notification - Body"
+}
+
 step "update-database" {
     name = "Update database"
 
@@ -116,9 +132,9 @@ step "notify-team" {
     action {
         action_type = "Octopus.Email"
         properties = {
-            Octopus.Action.Email.Body = "adsf"
-            Octopus.Action.Email.Subject = "adsf"
-            Octopus.Action.Email.To = "rob.pearson@octopus.com"
+            Octopus.Action.Email.Body = "#{email-body}"
+            Octopus.Action.Email.Subject = "#{email-subject}"
+            Octopus.Action.Email.To = "platform-team@octopus.com"
         }
         worker_pool_variable = ""
     }
