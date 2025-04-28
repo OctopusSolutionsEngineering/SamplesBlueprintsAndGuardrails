@@ -6,6 +6,22 @@ icon {
     id = "rocket"
 }
 
+step "update-database" {
+    name = "Update database"
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.RunOnServer = "false"
+            Octopus.Action.Script.ScriptBody = "# TODO "
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+            OctopusUseBundledTooling = "False"
+        }
+        worker_pool_variable = ""
+    }
+}
+
 step "deploy-microservice" {
     name = "Deploy microservice"
 
@@ -55,22 +71,6 @@ step "deploy-microservice" {
                   type: LoadBalancer
                 EOT
             Octopus.Action.Script.ScriptSource = "Inline"
-        }
-        worker_pool_variable = ""
-    }
-}
-
-step "update-database" {
-    name = "Update database"
-
-    action {
-        action_type = "Octopus.Script"
-        properties = {
-            Octopus.Action.RunOnServer = "false"
-            Octopus.Action.Script.ScriptBody = "# TODO "
-            Octopus.Action.Script.ScriptSource = "Inline"
-            Octopus.Action.Script.Syntax = "PowerShell"
-            OctopusUseBundledTooling = "False"
         }
         worker_pool_variable = ""
     }
