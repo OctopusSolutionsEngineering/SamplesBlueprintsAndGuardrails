@@ -33,6 +33,8 @@ step "update-database" {
                 # Updating database
                 
                 Write-Host "Executing database update script"
+                Write-Host "db-client run database=$OctopusParameters["db-connection-string"] $OctopusParameters["Octopus.Action.Package[db-package].ExtractedPath"]/*.sql"
+                
                 EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
@@ -42,6 +44,8 @@ step "update-database" {
 
         packages "db-package" {
             acquisition_location = "Server"
+            feed = "octopus-server-built-in"
+            package_id = ""
             properties = {
                 Extract = "True"
                 PackageParameterName = "db-package"
