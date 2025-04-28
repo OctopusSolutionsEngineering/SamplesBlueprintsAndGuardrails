@@ -6,6 +6,22 @@ icon {
     id = "rocket"
 }
 
+parameter "db-package" {
+    display_settings = {
+        Octopus.ControlType = "Package"
+    }
+    help_text = "Provide a Package with one or more SQL scripts to execute."
+    label = "Database Package"
+}
+
+parameter "db-connection-string" {
+    display_settings = {
+        Octopus.ControlType = "SingleLineText"
+    }
+    help_text = "Provide a database connection string."
+    label = "Database Connection String"
+}
+
 step "update-database" {
     name = "Update database"
 
@@ -13,12 +29,26 @@ step "update-database" {
         action_type = "Octopus.Script"
         properties = {
             Octopus.Action.RunOnServer = "false"
-            Octopus.Action.Script.ScriptBody = "# TODO "
+            Octopus.Action.Script.ScriptBody = <<-EOT
+                # Updating database
+                
+                Write-Host "Executing database update script"
+                EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
             OctopusUseBundledTooling = "False"
         }
         worker_pool_variable = ""
+
+        packages "db-package" {
+            acquisition_location = "Server"
+            properties = {
+                Extract = "True"
+                PackageParameterName = "db-package"
+                Purpose = ""
+                SelectionMode = "deferred"
+            }
+        }
     }
 }
 
