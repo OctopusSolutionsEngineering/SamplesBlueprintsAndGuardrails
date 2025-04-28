@@ -1,0 +1,2 @@
+name = "Deploy process - Microservice template"
+description = "Process template that will run a database update script, deploy a container, and send a slack notification."
