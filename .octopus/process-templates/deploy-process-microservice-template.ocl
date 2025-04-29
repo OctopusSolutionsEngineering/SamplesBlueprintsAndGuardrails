@@ -73,7 +73,7 @@ step "update-database" {
 }
 
 step "create-namespace" {
-    name = "Create namespace"
+    name = "Create namespace if doesn't exist"
 
     action {
         action_type = "Octopus.Script"
