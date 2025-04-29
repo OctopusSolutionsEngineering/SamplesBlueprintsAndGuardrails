@@ -76,13 +76,53 @@ step "deploy-microservice" {
     name = "Deploy microservice"
 
     action {
-        action_type = "Octopus.Script"
+        action_type = "Octopus.KubernetesDeployRawYaml"
         properties = {
-            Octopus.Action.RunOnServer = "false"
-            Octopus.Action.Script.ScriptBody = "Write-Host \"Deploying #{Octopus.Project.Name} #{Octopus.Release.Number} to #{Octopus.Environment.Name} ...\""
+            Octopus.Action.Kubernetes.DeploymentTimeout = "180"
+            Octopus.Action.Kubernetes.ResourceStatusCheck = "True"
+            Octopus.Action.Kubernetes.ServerSideApply.Enabled = "True"
+            Octopus.Action.Kubernetes.ServerSideApply.ForceConflicts = "True"
+            Octopus.Action.KubernetesContainers.CustomResourceYaml = <<-EOT
+                ---
+                # website::tag::1:: Deploy the training/webapp Docker Container: https://hub.docker.com/r/training/webapp/
+                apiVersion: apps/v1
+                kind: Deployment
+                metadata:
+                  name: hello-world-deployment
+                spec:
+                  selector:
+                    matchLabels:
+                      app: hello-world
+                  replicas: 1
+                  template:
+                    metadata:
+                      labels:
+                        app: hello-world
+                    spec:
+                      containers:
+                        # website::tag::2:: The container runs a Python webapp on port 5000 that responds with "Hello, World!"
+                        - name: hello-world
+                          image: training/webapp:latest
+                          ports:
+                            - containerPort: 5000
+                ---
+                # website::tag::3:: Expose the Python webapp on port 5000 via a Kubernetes LoadBalancer.
+                kind: Service
+                apiVersion: v1
+                metadata:
+                  name: hello-world-service
+                spec:
+                  selector:
+                    app: hello-world
+                  ports:
+                    - protocol: TCP
+                      targetPort: 5000
+                      port: 5000
+                  type: LoadBalancer
+                EOT
+            Octopus.Action.KubernetesContainers.Namespace = "#{Octopus.Project.Name}-#{Octopus.Environment.Name}"
+            Octopus.Action.Package.JsonConfigurationVariablesTargets = "**/*.{yml,yaml}"
             Octopus.Action.Script.ScriptSource = "Inline"
-            Octopus.Action.Script.Syntax = "PowerShell"
-            OctopusUseBundledTooling = "False"
         }
         worker_pool_variable = ""
     }
@@ -97,6 +137,22 @@ step "notify-team" {
             Octopus.Action.Email.Body = "#{email-body}"
             Octopus.Action.Email.Subject = "#{email-subject}"
             Octopus.Action.Email.To = "platform-team@octopus.com"
+        }
+        worker_pool_variable = ""
+    }
+}
+
+step "create-namespace" {
+    name = "Create namespace"
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.RunOnServer = "false"
+            Octopus.Action.Script.ScriptBody = "kubectl create namespace '$OctopusParameters[\"Octopus.Project.Name\"]-$OctopusParameters[\"Octopus.Environment.Name\"]'"
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+            OctopusUseBundledTooling = "False"
         }
         worker_pool_variable = ""
     }
