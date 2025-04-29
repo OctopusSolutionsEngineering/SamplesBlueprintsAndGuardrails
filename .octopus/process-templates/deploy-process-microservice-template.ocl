@@ -82,8 +82,7 @@ step "create-namespace-if-it-doesn-t-exist" {
             Octopus.Action.Script.ScriptBody = <<-EOT
                 # Create namespace if it doesn't exist 
                 
-                kubectl create namespace '$OctopusParameters["Octopus.Project.Name"]-$OctopusParameters["Octopus.Environment.Name"]'
-                
+                Write-Host "kubectl create namespace '$OctopusParameters["Octopus.Project.Name"]-$OctopusParameters["Octopus.Environment.Name"]'"
                 EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
