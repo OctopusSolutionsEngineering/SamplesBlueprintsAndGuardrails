@@ -94,7 +94,7 @@ step "create-namespace-if-it-doesn-t-exist" {
 }
 
 step "deploy-microservice-container" {
-    name = "Deploy microservice container"
+    name = "Deploy microservice"
 
     action {
         action_type = "Octopus.KubernetesDeployRawYaml"
