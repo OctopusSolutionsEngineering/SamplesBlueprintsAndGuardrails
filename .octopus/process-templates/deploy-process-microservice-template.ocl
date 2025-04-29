@@ -72,6 +72,22 @@ step "update-database" {
     }
 }
 
+step "create-namespace" {
+    name = "Create namespace"
+
+    action {
+        action_type = "Octopus.Script"
+        properties = {
+            Octopus.Action.RunOnServer = "false"
+            Octopus.Action.Script.ScriptBody = "kubectl create namespace '$OctopusParameters[\"Octopus.Project.Name\"]-$OctopusParameters[\"Octopus.Environment.Name\"]'"
+            Octopus.Action.Script.ScriptSource = "Inline"
+            Octopus.Action.Script.Syntax = "PowerShell"
+            OctopusUseBundledTooling = "False"
+        }
+        worker_pool_variable = ""
+    }
+}
+
 step "deploy-microservice" {
     name = "Deploy microservice"
 
@@ -137,22 +153,6 @@ step "notify-team" {
             Octopus.Action.Email.Body = "#{email-body}"
             Octopus.Action.Email.Subject = "#{email-subject}"
             Octopus.Action.Email.To = "platform-team@octopus.com"
-        }
-        worker_pool_variable = ""
-    }
-}
-
-step "create-namespace" {
-    name = "Create namespace"
-
-    action {
-        action_type = "Octopus.Script"
-        properties = {
-            Octopus.Action.RunOnServer = "false"
-            Octopus.Action.Script.ScriptBody = "kubectl create namespace '$OctopusParameters[\"Octopus.Project.Name\"]-$OctopusParameters[\"Octopus.Environment.Name\"]'"
-            Octopus.Action.Script.ScriptSource = "Inline"
-            Octopus.Action.Script.Syntax = "PowerShell"
-            OctopusUseBundledTooling = "False"
         }
         worker_pool_variable = ""
     }
