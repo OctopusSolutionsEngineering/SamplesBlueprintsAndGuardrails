@@ -324,7 +324,21 @@ step "build-delta-report" {
                   chmod +x "./$projectExe"
                 }
                 
-                & "./$projectExe" --ConnectionString="$connectionString" --PreviewReportPath="$changeReportDirectory"
+                #& "./$projectExe" --ConnectionString="$connectionString" --PreviewReportPath="$changeReportDirectory"
+                
+                $extension = [System.IO.Path]::GetExtension($projectExe)
+                
+                switch ($extension)
+                {
+                  ".exe" {
+                    & "./$projectExe" --ConnectionString="$connectionString"
+                    break
+                  }
+                  ".dll" {
+                    dotnet $projectExe --ConnectionString="$connectionString"
+                    break
+                  }
+                }
                                 
                 $generatedReport = "$changeReportDirectory/UpgradeReport.html"
                 New-OctopusArtifact -Path "$generatedReport" -Name "$environmentName.UpgradeReport.html"
@@ -437,7 +451,19 @@ step "deploy-database-changes" {
                   chmod +x "./$projectExe"
                 }
                 
-                & "./$projectExe" --ConnectionString="$connectionString"
+                $extension = [System.IO.Path]::GetExtension($projectExe)
+                
+                switch ($extension)
+                {
+                  ".exe" {
+                    & "./$projectExe" --ConnectionString="$connectionString"
+                    break
+                  }
+                  ".dll" {
+                    dotnet $projectExe --ConnectionString="$connectionString"
+                    break
+                  }
+                }
                 EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
