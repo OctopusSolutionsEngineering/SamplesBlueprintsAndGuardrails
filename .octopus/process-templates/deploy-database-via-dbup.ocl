@@ -294,6 +294,19 @@ step "build-delta-report" {
                 $environmentName = $OctopusParameters["Octopus.Environment.Name"]
                 $extractedPath = $OctopusParameters["Octopus.Action.Package[Template.Database.Package].ExtractedPath"]
                 
+                # Check to see if $IsWindows is available
+                if ($null -eq $IsWindows) {
+                    Write-Host "Determining Operating System..."
+                    $IsWindows = ([System.Environment]::OSVersion.Platform -eq "Win32NT")
+                    $IsLinux = ([System.Environment]::OSVersion.Platform -eq "Unix")
+                }
+                
+                # Fix ANSI Color on PWSH Core issues when displaying objects
+                if ($PSEdition -eq "Core") {
+                    $PSStyle.OutputRendering = "PlainText"
+                }
+                
+                
                 Get-ChildItem -Path "$extractedPath" -File
                                 
                 Write-Host "Setting the current location to $extractedPath"
@@ -306,7 +319,10 @@ step "build-delta-report" {
                   New-Item $changeReportDirectory -ItemType "directory"
                 }
                 
-                chmod +x "./$projectExe"
+                if ($IsLinux)
+                {
+                  chmod +x "./$projectExe"
+                }
                 
                 & "./$projectExe" --ConnectionString="$connectionString" --PreviewReportPath="$changeReportDirectory"
                                 
