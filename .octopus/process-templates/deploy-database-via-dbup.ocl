@@ -416,11 +416,26 @@ step "deploy-database-changes" {
                 $projectExe = $OctopusParameters["Template.DbUp.Executable"]
                 $environmentName = $OctopusParameters["Octopus.Environment.Name"]
                 $extractedPath = $OctopusParameters["Octopus.Action.Package[Template.Database.Package].ExtractedPath"]
+                
+                # Check to see if $IsWindows is available
+                if ($null -eq $IsWindows) {
+                    Write-Host "Determining Operating System..."
+                    $IsWindows = ([System.Environment]::OSVersion.Platform -eq "Win32NT")
+                    $IsLinux = ([System.Environment]::OSVersion.Platform -eq "Unix")
+                }
+                
+                # Fix ANSI Color on PWSH Core issues when displaying objects
+                if ($PSEdition -eq "Core") {
+                    $PSStyle.OutputRendering = "PlainText"
+                }
                                 
                 Write-Host "Setting the current location to $extractedPath"
                 Set-Location $extractedPath
                 
-                chmod +x "./$projectExe"
+                if ($IsLinux)
+                {
+                  chmod +x "./$projectExe"
+                }
                 
                 & "./$projectExe" --ConnectionString="$connectionString"
                 EOT
