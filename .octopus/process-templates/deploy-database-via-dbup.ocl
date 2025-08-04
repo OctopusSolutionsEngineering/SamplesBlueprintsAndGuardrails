@@ -48,6 +48,14 @@ parameter "Template.Notification.Email" {
     label = "Notification Email Addresses"
 }
 
+parameter "Template.Worker.Pool" {
+    display_settings = {
+        Octopus.ControlType = "WorkerPool"
+    }
+    help_text = "**Required:** The worker pool that the steps will run on."
+    label = "Worker Pool"
+}
+
 step "calculate-deployment-mode" {
     name = "Calculate Deployment Mode"
 
@@ -262,11 +270,13 @@ step "calculate-deployment-mode" {
                 Write-Host "Setting the output variable 'Octopus.Action[$($stepName)].Output.RunOnRevisionVersionChange' so you can use it as a run condition"
                 Write-Verbose $runOnRevisionVersionChange
                 Set-OctopusVariable -Name "RunOnRevisionVersionChange" -Value $runOnRevisionVersionChange
+                
                 EOT
             Octopus.Action.Script.ScriptSource = "Inline"
             Octopus.Action.Script.Syntax = "PowerShell"
             OctopusUseBundledTooling = "False"
         }
+        worker_pool_variable = "#{Template.Worker.Pool}"
     }
 }
 
@@ -347,6 +357,7 @@ step "build-delta-report" {
             Octopus.Action.Script.Syntax = "PowerShell"
             OctopusUseBundledTooling = "False"
         }
+        worker_pool_variable = "#{Template.Worker.Pool}"
 
         packages "Template.Database.Package" {
             acquisition_location = "Server"
@@ -469,6 +480,7 @@ step "deploy-database-changes" {
             Octopus.Action.Script.Syntax = "PowerShell"
             OctopusUseBundledTooling = "False"
         }
+        worker_pool_variable = "#{Template.Worker.Pool}"
 
         packages "Template.Database.Package" {
             acquisition_location = "Server"
