@@ -414,6 +414,7 @@ step "dbas-approve-delta-script" {
 
     action {
         action_type = "Octopus.Manual"
+        environments_variable = "#{Template.Approval.Environment}"
         notes = <<-EOT
                 **Runs on Deployments Only**
                 
