@@ -56,6 +56,14 @@ parameter "Template.Worker.Pool" {
     label = "Worker Pool"
 }
 
+parameter "Template.Approval.Environment" {
+    display_settings = {
+        Octopus.ControlType = "Environments"
+    }
+    help_text = "**Required:** The environment the Manual Intervention step runs on."
+    label = "Approval Environment"
+}
+
 step "calculate-deployment-mode" {
     name = "Calculate Deployment Mode"
 
