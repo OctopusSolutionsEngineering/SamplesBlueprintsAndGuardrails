@@ -1,2 +1,27 @@
 name = "Production Gate"
 description = "A production gate."
+
+step "manual-intervention-required" {
+    name = "Manual Intervention Required"
+
+    action {
+        action_type = "Octopus.Manual"
+        properties = {
+            Octopus.Action.Manual.BlockConcurrentDeployments = "False"
+            Octopus.Action.Manual.Instructions = "OK to deploy to production?"
+        }
+    }
+}
+
+step "send-an-email" {
+    name = "Send an Email"
+
+    action {
+        action_type = "Octopus.Email"
+        properties = {
+            Octopus.Action.Email.Body = "A production deployment is occuring."
+            Octopus.Action.Email.Subject = "Production Deployment"
+            Octopus.Action.Email.To = "approvers@octopus.com"
+        }
+    }
+}
