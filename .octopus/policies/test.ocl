@@ -1,0 +1,18 @@
+name = "test"
+violation_action = "block"
+
+conditions {
+    rego = <<-EOT
+            package test
+            
+            default result := {"allowed": true}
+            EOT
+}
+
+scope {
+    rego = <<-EOT
+            package test
+            
+            default evaluate := true
+            EOT
+}
