@@ -1,2 +1,2 @@
 name = "Deploy process - Microservice pipeline"
-description = "Builds a container image, pushes to the built-in feed, deploys through Dev/Staging/Prod with smoke tests, integration tests, manual approval, and a Slack notification."
+description = ""
